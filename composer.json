@@ -1,9 +1,9 @@
 {
-    "name": "ccvonlinepayments/lib",
+    "name": "ccv/lib",
     "description": "CCVOnlinePayments library for PHP",
-    "homepage": "https://www.ccvshop.nl/ccv-online-payments",
+    "homepage": "https://www.ccv.eu/nl/betaaloplossingen/betaaloplossingen-online/ccv-online-payments/",
     "type": "library",
-    "version": "1.0",
+    "version": "1.1",
     "require": {
         "php": ">=7.2.0",
         "php-curl-class/php-curl-class": "^8.8",
