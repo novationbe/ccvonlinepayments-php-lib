@@ -8,11 +8,14 @@ class Method {
     private $issuerKey;
     private $issuers;
 
-    public function __construct($id, $issuerKey = null, $issuers = null)
+    private $refundSupported;
+
+    public function __construct($id, $issuerKey = null, $issuers = null, bool $refundSupported)
     {
         $this->id           = $id;
         $this->issuerKey    = $issuerKey;
         $this->issuers      = $issuers;
+        $this->refundSupported    = $refundSupported;
     }
 
     public function getId() {
@@ -21,6 +24,11 @@ class Method {
 
     public function getName() {
         return $this->id;
+    }
+
+    public function isRefundSupported(): bool
+    {
+        return $this->refundSupported;
     }
 
     /**

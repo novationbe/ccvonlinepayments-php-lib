@@ -74,7 +74,7 @@ class CcvOnlinePaymentsApi {
 
                 /** @var Issuer $issuer */
                 foreach($issuers as $issuer) {
-                    $methods[] = new Method("card_".$issuer->getId(), null, null);
+                    $methods[] = new Method("card_".$issuer->getId(), null, null, true);
                 }
             }else {
                 if($methodId === "ideal") {
@@ -85,7 +85,7 @@ class CcvOnlinePaymentsApi {
                     $issuers = $this->parseIssuers($responseMethod, $issuerKey, "issuerdescription",null, null);
                 }
 
-                $methods[] = new Method($methodId, $issuerKey, $issuers);
+                $methods[] = new Method($methodId, $issuerKey, $issuers, !in_array($methodId, ['landingpage','terminal', 'token', 'vault']));
             }
         }
 
@@ -213,6 +213,30 @@ class CcvOnlinePaymentsApi {
         return $paymentResponse;
     }
 
+    /**
+     * @param RefundRequest $request
+     * @return RefundResponse
+     */
+    public function createRefund(RefundRequest $request) {
+        $requestData = [
+            "reference" => $request->getReference()
+        ];
+
+        if($request->getDescription() !== null) {
+            $requestData["description"] =  $request->getDescription();
+        }
+
+        if($request->getAmount() !== null) {
+            $requestData["amount"] = number_format($request->getAmount(),2,".","");
+        }
+
+        $apiResponse = $this->apiPost("api/v1/refund", $requestData, $request->getIdempotencyReference());
+
+        $refundResponse = new RefundResponse();
+        $refundResponse->setReference($apiResponse->reference);
+        return $refundResponse;
+    }
+
     private function removeNullAndFormat(&$array) {
         foreach($array as $key => &$value) {
             if($value === null) {
@@ -257,15 +281,15 @@ class CcvOnlinePaymentsApi {
         return null;
     }
 
-    private function apiGet(string $endpoint, array $parameters) {
-        return $this->apiCall("get", $endpoint, $parameters);
+    private function apiGet(string $endpoint, array $parameters, ?string $idempotencyReference = null) {
+        return $this->apiCall("get", $endpoint, $parameters, $idempotencyReference);
     }
 
-    private function apiPost(string $endpoint, array $parameters) {
-        return $this->apiCall("post", $endpoint, $parameters);
+    private function apiPost(string $endpoint, array $parameters, ?string $idempotencyReference = null) {
+        return $this->apiCall("post", $endpoint, $parameters, $idempotencyReference);
     }
 
-    private function apiCall(string $method, string $endpoint, array $parameters) {
+    private function apiCall(string $method, string $endpoint, array $parameters, ?string $idempotencyReference = null) {
         $curl = new Curl();
         $curl->setBasicAuthentication($this->apiKey);
         $curl->setOpt(CURLINFO_HEADER_OUT, true);
@@ -273,6 +297,10 @@ class CcvOnlinePaymentsApi {
         if($method === "post") {
             $curl->setHeader("Content-Type", "application/json");
             $parameters = json_encode($parameters);
+        }
+
+        if($idempotencyReference) {
+            $curl->setHeader("Idempotency-Reference", $idempotencyReference);
         }
 
         $curl->$method(self::API_ROOT.$endpoint, $parameters);
