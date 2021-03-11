@@ -1,9 +1,11 @@
 {
-    "name": "ccv/lib",
-    "description": "CCVOnlinePayments library for PHP",
-    "homepage": "https://www.ccv.eu/nl/betaaloplossingen/betaaloplossingen-online/ccv-online-payments/",
+    "name": "ccv/php-lib",
+    "description": "Payment PHP library used by the official CCV Payment Services plugins",
+    "keywords": ["php", "library", "payments", "ccv"],
+    "homepage": "https://github.com/CCV/ccvonlinepayments-php-lib",
+    "license": "MIT",
     "type": "library",
-    "version": "1.2",
+    "version": "1.2.1",
     "require": {
         "php": ">=7.2.0",
         "ext-json": "*",
