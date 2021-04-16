@@ -332,7 +332,11 @@ class PaymentRequest {
 
     public function setAccountInfoAccountCreationDate($accountInfo_accountCreationDate)
     {
-        $this->accountInfo_accountCreationDate = $accountInfo_accountCreationDate;
+        if($accountInfo_accountCreationDate instanceof \DateTime) {
+            $this->accountInfo_accountCreationDate = $accountInfo_accountCreationDate;
+        }else{
+            $this->accountInfo_accountCreationDate = null;
+        }
     }
 
     public function getAccountInfoAccountChangeDate()
@@ -342,7 +346,11 @@ class PaymentRequest {
 
     public function setAccountInfoAccountChangeDate($accountInfo_accountChangeDate)
     {
-        $this->accountInfo_accountChangeDate = $accountInfo_accountChangeDate;
+        if($accountInfo_accountChangeDate instanceof \DateTime) {
+            $this->accountInfo_accountChangeDate = $accountInfo_accountChangeDate;
+        }else{
+            $this->accountInfo_accountChangeDate = null;
+        }
     }
 
     public function getAccountInfoEmail()
