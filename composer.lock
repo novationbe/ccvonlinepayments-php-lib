@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16a986104406370bcb04224c99f43b7c",
+    "content-hash": "d569039c2a43a6ef7fbbf7098ee7dfd6",
     "packages": [
         {
             "name": "brick/phonenumber",
@@ -54,16 +54,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.12.19",
+            "version": "8.12.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "f3c196dcb3e76e456783a38bab87d99b4d727918"
+                "reference": "dc9992c35e52235c36241ebb5ddc280ceebe3c09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/f3c196dcb3e76e456783a38bab87d99b4d727918",
-                "reference": "f3c196dcb3e76e456783a38bab87d99b4d727918",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/dc9992c35e52235c36241ebb5ddc280ceebe3c09",
+                "reference": "dc9992c35e52235c36241ebb5ddc280ceebe3c09",
                 "shasum": ""
             },
             "require": {
@@ -77,7 +77,7 @@
                 "pear/versioncontrol_git": "^0.5",
                 "phing/phing": "^2.7",
                 "php-coveralls/php-coveralls": "^1.0|^2.0",
-                "symfony/console": "^2.8|^3.0",
+                "symfony/console": "^2.8|^3.0|^v4.4|^v5.2",
                 "symfony/phpunit-bridge": "^4.2 || ^5"
             },
             "type": "library",
@@ -123,7 +123,7 @@
                 "issues": "https://github.com/giggsey/libphonenumber-for-php/issues",
                 "source": "https://github.com/giggsey/libphonenumber-for-php"
             },
-            "time": "2021-03-01T16:07:56+00:00"
+            "time": "2021-04-29T07:34:59+00:00"
         },
         {
             "name": "giggsey/locale",
@@ -180,16 +180,16 @@
         },
         {
             "name": "php-curl-class/php-curl-class",
-            "version": "8.9.0",
+            "version": "8.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-curl-class/php-curl-class.git",
-                "reference": "a40cc77eb45bc6489240415197734ca747ce4820"
+                "reference": "45db373722c983f4c65269b92e1c351ee390c292"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-curl-class/php-curl-class/zipball/a40cc77eb45bc6489240415197734ca747ce4820",
-                "reference": "a40cc77eb45bc6489240415197734ca747ce4820",
+                "url": "https://api.github.com/repos/php-curl-class/php-curl-class/zipball/45db373722c983f4c65269b92e1c351ee390c292",
+                "reference": "45db373722c983f4c65269b92e1c351ee390c292",
                 "shasum": ""
             },
             "require": {
@@ -245,9 +245,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-curl-class/php-curl-class/issues",
-                "source": "https://github.com/php-curl-class/php-curl-class/tree/8.9.0"
+                "source": "https://github.com/php-curl-class/php-curl-class/tree/8.9.2"
             },
-            "time": "2020-11-01T03:47:32+00:00"
+            "time": "2021-03-17T14:47:06+00:00"
         },
         {
             "name": "psr/log",

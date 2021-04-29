@@ -453,7 +453,7 @@ class PaymentRequest {
     private function getPhoneNumber($phoneNumber, $countryCode) {
         try {
             $number = PhoneNumber::parse($phoneNumber, $countryCode);
-            return $number->format(PhoneNumberFormat::E164);
+            return $number->getNationalNumber();
         }catch(PhoneNumberParseException $phoneNumberParseException) {
             return null;
         }
