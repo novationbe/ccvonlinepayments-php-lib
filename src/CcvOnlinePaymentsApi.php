@@ -258,6 +258,7 @@ class CcvOnlinePaymentsApi {
         $paymentStatus = new PaymentStatus();
         $paymentStatus->setAmount($apiResponse->amount);
         $paymentStatus->setStatus($apiResponse->status);
+        $paymentStatus->setFailureCode($apiResponse->failureCode ?? null);
 
         return $paymentStatus;
     }
@@ -337,7 +338,7 @@ class CcvOnlinePaymentsApi {
 
         if($statusCode >= 200 && $statusCode < 300) {
             return $response;
-        }elseif($curl->httpStatusCode == 401) {
+        }elseif($statusCode == 401) {
             throw new InvalidApiKeyException($curl->rawResponse);
         }else{
             throw new ApiException($curl->rawResponse);
