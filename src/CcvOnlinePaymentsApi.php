@@ -59,6 +59,16 @@ class CcvOnlinePaymentsApi {
         return $this->methods;
     }
 
+    public function getMethodById($methodId) {
+        foreach($this->getMethods() as $method) {
+            if($method->getId() === $methodId) {
+                return $method;
+            }
+        }
+
+        return null;
+    }
+
     private function _getMethods() {
         $apiResponse = $this->apiGet("api/v1/method", []);
 
@@ -116,6 +126,7 @@ class CcvOnlinePaymentsApi {
             "card_maestro",
             "card_mastercard",
             "card_visa",
+            "klarna",
             "paypal",
             "card_amex",
             "sofort",
@@ -182,6 +193,7 @@ class CcvOnlinePaymentsApi {
             "shippingCountry"           => $request->getShippingCountry(),
             "shippingHouseNumber"       => $request->getShippingHouseNumber(),
             "shippingHouseExtension"    => $request->getShippingHouseExtension(),
+            "transactionType"           => $request->getTransactionType(),
             "accountInfo" => [
                 "accountIdentifier"     =>  $request->getAccountInfoAccountIdentifier(),
                 "accountCreationDate"   =>  $request->getAccountInfoAccountCreationDate(),
@@ -200,8 +212,16 @@ class CcvOnlinePaymentsApi {
                 "language"      => $request->getBrowserLanguage(),
                 "ipAddress"     => $request->getBrowserIpAddress(),
                 "userAgent"     => $request->getBrowserUserAgent()
-            ]
+            ],
+            "details"           => $request->getDetails()
         ];
+
+        if($request->getOrderLines() !== null) {
+            $requestData["orderLines"] = [];
+            foreach($request->getOrderLines() as $orderLine) {
+                $requestData["orderLines"][] = $this->getDataByOrderLine($orderLine);
+            }
+        }
 
         $this->removeNullAndFormat($requestData);
 
@@ -211,6 +231,24 @@ class CcvOnlinePaymentsApi {
         $paymentResponse->setReference($apiResponse->reference);
         $paymentResponse->setPayUrl($apiResponse->payUrl);
         return $paymentResponse;
+    }
+
+    private function getDataByOrderLine(OrderLine $orderLine) {
+        return [
+            "type"          => $orderLine->getType(),
+            "name"          => $orderLine->getName(),
+            "code"          => $orderLine->getCode(),
+            "quantity"      => $orderLine->getQuantity(),
+            "unit"          => $orderLine->getUnit(),
+            "unitPrice"     => $orderLine->getUnitPrice(),
+            "totalPrice"    => $orderLine->getTotalPrice(),
+            "discount"      => $orderLine->getDiscount(),
+            "vatRate"       => $orderLine->getVatRate(),
+            "vat"           => $orderLine->getVat(),
+            "url"           => $orderLine->getUrl(),
+            "imageUrl"      => $orderLine->getImageUrl(),
+            "brand"         => $orderLine->getBrand(),
+        ];
     }
 
     /**
@@ -230,11 +268,67 @@ class CcvOnlinePaymentsApi {
             $requestData["amount"] = number_format($request->getAmount(),2,".","");
         }
 
+        if($request->getOrderLines() !== null) {
+            $requestData["orderLines"] = [];
+            foreach($request->getOrderLines() as $orderLine) {
+                $requestData["orderLines"][] = $this->getDataByOrderLine($orderLine);
+            }
+        }
+
+        $this->removeNullAndFormat($requestData);
+
         $apiResponse = $this->apiPost("api/v1/refund", $requestData, $request->getIdempotencyReference());
 
         $refundResponse = new RefundResponse();
         $refundResponse->setReference($apiResponse->reference);
         return $refundResponse;
+    }
+
+    /**
+     * @param CaptureRequest $request
+     * @return CaptureResponse
+     */
+    public function createCapture(CaptureRequest $request) {
+        $requestData = [
+            "reference" => $request->getReference()
+        ];
+
+        if($request->getAmount() !== null) {
+            $requestData["amount"] = number_format($request->getAmount(),2,".","");
+        }
+
+        if($request->getOrderLines() !== null) {
+            $requestData["orderLines"] = [];
+            foreach($request->getOrderLines() as $orderLine) {
+                $requestData["orderLines"][] = $this->getDataByOrderLine($orderLine);
+            }
+        }
+
+        $this->removeNullAndFormat($requestData);
+
+        $apiResponse = $this->apiPost("api/v1/capture", $requestData, $request->getIdempotencyReference());
+
+        $captureResponse = new CaptureResponse();
+        $captureResponse->setReference($apiResponse->reference);
+        return $captureResponse;
+    }
+
+    /**
+     * @param ReversalRequest $request
+     * @return ReversalResponse
+     */
+    public function createReversal(ReversalRequest $request) {
+        $requestData = [
+            "reference" => $request->getReference()
+        ];
+
+        $this->removeNullAndFormat($requestData);
+
+        $apiResponse = $this->apiPost("api/v1/reversal", $requestData, $request->getIdempotencyReference());
+
+        $reversalResponse = new ReversalResponse();
+        $reversalResponse->setReference($apiResponse->reference);
+        return $reversalResponse;
     }
 
     private function removeNullAndFormat(&$array) {
@@ -259,6 +353,7 @@ class CcvOnlinePaymentsApi {
         $paymentStatus->setAmount($apiResponse->amount);
         $paymentStatus->setStatus($apiResponse->status);
         $paymentStatus->setFailureCode($apiResponse->failureCode ?? null);
+        $paymentStatus->setTransactionType($apiResponse->type);
 
         return $paymentStatus;
     }
@@ -290,14 +385,16 @@ class CcvOnlinePaymentsApi {
         return $this->apiCall("post", $endpoint, $parameters, $idempotencyReference);
     }
 
-    private function apiCall(string $method, string $endpoint, array $parameters, ?string $idempotencyReference = null) {
+    private function apiCall(string $method, string $endpoint, array $originalParameters, ?string $idempotencyReference = null, int $attempt = 0) {
         $curl = new Curl();
         $curl->setBasicAuthentication($this->apiKey);
         $curl->setOpt(CURLINFO_HEADER_OUT, true);
 
         if($method === "post") {
             $curl->setHeader("Content-Type", "application/json");
-            $parameters = json_encode($parameters);
+            $parameters = json_encode($originalParameters);
+        }else{
+            $parameters = $originalParameters;
         }
 
         if($idempotencyReference) {
@@ -330,7 +427,11 @@ class CcvOnlinePaymentsApi {
         $response = $curl->response;
         $curl->close();
 
-        if($statusCode >= 200 && $statusCode < 300) {
+        if($statusCode == 429 && $attempt < 3) {
+            $this->logger->warning("CCV Online Payments api request - Too many requests", $loggingContext);
+            sleep(2*($attempt+1));
+            return $this->apiCall($method, $endpoint, $originalParameters, $idempotencyReference, $attempt++);
+        }else if($statusCode >= 200 && $statusCode < 300) {
             $this->logger->debug("CCV Online Payments api request", $loggingContext);
         }else{
             $this->logger->error("CCV Online Payments api request error", $loggingContext);

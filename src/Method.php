@@ -10,12 +10,12 @@ class Method {
 
     private $refundSupported;
 
-    public function __construct($id, $issuerKey = null, $issuers = null, bool $refundSupported)
+    public function __construct($id, $issuerKey = null, $issuers = null, bool $refundSupported = false)
     {
-        $this->id           = $id;
-        $this->issuerKey    = $issuerKey;
-        $this->issuers      = $issuers;
-        $this->refundSupported    = $refundSupported;
+        $this->id                        = $id;
+        $this->issuerKey                 = $issuerKey;
+        $this->issuers                   = $issuers;
+        $this->refundSupported           = $refundSupported;
     }
 
     public function getId() {
@@ -29,6 +29,18 @@ class Method {
     public function isRefundSupported(): bool
     {
         return $this->refundSupported;
+    }
+
+    public function isTransactionTypeSaleSupported() {
+        return $this->id !== "klarna";
+    }
+
+    public function isTransactionTypeAuthoriseSupported() {
+        return $this->id === "klarna";
+    }
+
+    public function isOrderLinesRequired() {
+        return $this->id === "klarna";
     }
 
     /**

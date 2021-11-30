@@ -2,11 +2,10 @@
 namespace CCVOnlinePayments\Lib;
 
 
-class RefundRequest {
+class CaptureRequest {
 
     private $reference;
     private $amount;
-    private $description;
     private $idempotencyReference;
 
     private $orderLines = [];
@@ -29,16 +28,6 @@ class RefundRequest {
     public function setAmount($amount)
     {
         $this->amount = $amount;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    public function setDescription($description): void
-    {
-        $this->description = $description;
     }
 
     public function getIdempotencyReference()

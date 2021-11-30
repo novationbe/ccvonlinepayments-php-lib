@@ -2,10 +2,13 @@
 namespace CCVOnlinePayments\Lib;
 
 use Brick\PhoneNumber\PhoneNumber;
-use Brick\PhoneNumber\PhoneNumberFormat;
 use Brick\PhoneNumber\PhoneNumberParseException;
 
 class PaymentRequest {
+
+    public const TRANSACTION_TYPE_SALE      = "sale";
+    public const TRANSACTION_TYPE_CREDIT    = "credit";
+    public const TRANSACTION_TYPE_AUTHORIZE = "authorise";
 
     private $currency;
     private $amount;
@@ -36,6 +39,8 @@ class PaymentRequest {
     private $shippingHouseNumber;
     private $shippingHouseExtension;
 
+    private $transactionType;
+
     private $accountInfo_accountIdentifier;
     private $accountInfo_accountCreationDate;
     private $accountInfo_accountChangeDate;
@@ -49,6 +54,10 @@ class PaymentRequest {
     private $browser_ipAddress;
     private $browser_language;
     private $browser_userAgent;
+
+    private $details;
+
+    private $orderLines = [];
 
     public function getCurrency()
     {
@@ -202,6 +211,10 @@ class PaymentRequest {
 
     public function getBillingCountry()
     {
+        if($this->billingCountry === "NL") {
+            return "NLD";
+        }
+
         return $this->billingCountry;
     }
 
@@ -287,6 +300,10 @@ class PaymentRequest {
 
     public function getShippingCountry()
     {
+        if($this->shippingCountry === "NL") {
+            return "NLD";
+        }
+
         return $this->shippingCountry;
     }
 
@@ -467,5 +484,36 @@ class PaymentRequest {
             return null;
         }
     }
+
+    public function getTransactionType()
+    {
+        return $this->transactionType;
+    }
+
+    public function setTransactionType($transactionType): void
+    {
+        $this->transactionType = $transactionType;
+    }
+
+    public function getOrderLines(): array
+    {
+        return $this->orderLines;
+    }
+
+    public function setOrderLines(array $orderLines): void
+    {
+        $this->orderLines = $orderLines;
+    }
+
+    public function getDetails() : ?array
+    {
+        return $this->details;
+    }
+
+    public function setDetails(array $details): void
+    {
+        $this->details = $details;
+    }
+
 
 }

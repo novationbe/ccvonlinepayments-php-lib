@@ -20,6 +20,8 @@ class PaymentStatus {
     private $status;
     private $failureCode;
 
+    private $transactionType;
+
     public function getAmount()
     {
         return $this->amount;
@@ -50,4 +52,13 @@ class PaymentStatus {
         $this->failureCode = $failureCode;
     }
 
+    public function getTransactionType()
+    {
+        return $this->transactionType;
+    }
+
+    public function setTransactionType($transactionType): void
+    {
+        $this->transactionType = $transactionType;
+    }
 }
