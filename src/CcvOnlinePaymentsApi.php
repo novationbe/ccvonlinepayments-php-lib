@@ -10,6 +10,8 @@ class CcvOnlinePaymentsApi {
 
     const API_ROOT = "https://redirect.jforce.be/";
 
+    private $apiRoot;
+
     private $cache;
     private $logger;
     private $apiKey;
@@ -22,6 +24,11 @@ class CcvOnlinePaymentsApi {
         $this->cache    = $cache;
         $this->logger   = $logger;
         $this->apiKey   = $apiKey;
+        $this->apiRoot  = self::API_ROOT;
+    }
+
+    public function setApiRoot(string $apiRoot) {
+        $this->apiRoot = $apiRoot;
     }
 
     public function setMetadata($metadata) {
@@ -354,6 +361,7 @@ class CcvOnlinePaymentsApi {
         $paymentStatus->setStatus($apiResponse->status);
         $paymentStatus->setFailureCode($apiResponse->failureCode ?? null);
         $paymentStatus->setTransactionType($apiResponse->type);
+        $paymentStatus->setDetails($apiResponse->details??(new \stdClass()));
 
         return $paymentStatus;
     }
@@ -401,7 +409,7 @@ class CcvOnlinePaymentsApi {
             $curl->setHeader("Idempotency-Reference", $idempotencyReference);
         }
 
-        $curl->$method(self::API_ROOT.$endpoint, $parameters);
+        $curl->$method($this->apiRoot.$endpoint, $parameters);
 
         $requestHeaders = [];
         foreach($curl->getRequestHeaders() as $key => $value) {
