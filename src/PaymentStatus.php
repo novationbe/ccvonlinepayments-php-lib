@@ -22,6 +22,8 @@ class PaymentStatus {
 
     private $transactionType;
 
+    private $details;
+
     public function getAmount()
     {
         return $this->amount;
@@ -60,5 +62,15 @@ class PaymentStatus {
     public function setTransactionType($transactionType): void
     {
         $this->transactionType = $transactionType;
+    }
+
+    public function getDetails() : ?object
+    {
+        return $this->details;
+    }
+
+    public function setDetails(object $details): void
+    {
+        $this->details = $details;
     }
 }
