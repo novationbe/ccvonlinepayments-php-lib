@@ -189,10 +189,13 @@ class CcvOnlinePaymentsApi {
             "billingState"              => $request->getBillingState(),
             "billingPostalCode"         => $request->getBillingPostalCode(),
             "billingCountry"            => $request->getBillingCountry(),
+            "billingEmail"              => $request->getBillingEmail(),
             "billingHouseNumber"        => $request->getBillingHouseNumber(),
             "billingHouseExtension"     => $request->getBillingHouseExtension(),
             "billingPhoneNumber"        => $request->getBillingPhoneNumber(),
             "billingPhoneCountry"       => $request->getBillingPhoneCountry(),
+            "billingFirstName"          => $request->getBillingFirstName(),
+            "billingLastName"           => $request->getBillingLastName(),
             "shippingAddress"           => $request->getShippingAddress(),
             "shippingCity"              => $request->getShippingCity(),
             "shippingState"             => $request->getShippingState(),
@@ -200,6 +203,9 @@ class CcvOnlinePaymentsApi {
             "shippingCountry"           => $request->getShippingCountry(),
             "shippingHouseNumber"       => $request->getShippingHouseNumber(),
             "shippingHouseExtension"    => $request->getShippingHouseExtension(),
+            "shippingEmail"             => $request->getShippingEmail(),
+            "shippingFirstName"         => $request->getShippingFirstName(),
+            "shippingLastName"          => $request->getShippingLastName(),
             "transactionType"           => $request->getTransactionType(),
             "accountInfo" => [
                 "accountIdentifier"     =>  $request->getAccountInfoAccountIdentifier(),
@@ -236,7 +242,12 @@ class CcvOnlinePaymentsApi {
 
         $paymentResponse = new PaymentResponse();
         $paymentResponse->setReference($apiResponse->reference);
-        $paymentResponse->setPayUrl($apiResponse->payUrl);
+
+        if(isset($apiResponse->payUrl)) {
+            $paymentResponse->setPayUrl($apiResponse->payUrl);
+        }else{
+            $paymentResponse->setPayUrl($apiResponse->returnUrl);
+        }
         return $paymentResponse;
     }
 

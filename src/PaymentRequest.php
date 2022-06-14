@@ -28,9 +28,12 @@ class PaymentRequest {
     private $billingState;
     private $billingPostalCode;
     private $billingCountry;
+    private $billingEmail;
     private $billingHouseNumber;
     private $billingHouseExtension;
     private $billingPhoneNumber;
+    private $billingFirstName;
+    private $billingLastName;
     private $shippingAddress;
     private $shippingCity;
     private $shippingState;
@@ -38,6 +41,9 @@ class PaymentRequest {
     private $shippingCountry;
     private $shippingHouseNumber;
     private $shippingHouseExtension;
+    private $shippingEmail;
+    private $shippingFirstName;
+    private $shippingLastName;
 
     private $transactionType;
 
@@ -223,6 +229,16 @@ class PaymentRequest {
         $this->billingCountry = $billingCountry;
     }
 
+    public function getBillingEmail()
+    {
+        return $this->billingEmail;
+    }
+
+    public function setBillingEmail($billingEmail): void
+    {
+        $this->billingEmail = $billingEmail;
+    }
+
     public function getBillingHouseNumber()
     {
         return $this->billingHouseNumber;
@@ -256,6 +272,26 @@ class PaymentRequest {
     public function setBillingPhoneNumber($billingPhoneNumber)
     {
         $this->billingPhoneNumber = $billingPhoneNumber;
+    }
+
+    public function getBillingFirstName()
+    {
+        return $this->billingFirstName;
+    }
+
+    public function setBillingFirstName($billingFirstName): void
+    {
+        $this->billingFirstName = $billingFirstName;
+    }
+
+    public function getBillingLastName()
+    {
+        return $this->billingLastName;
+    }
+
+    public function setBillingLastName($billingLastName): void
+    {
+        $this->billingLastName = $billingLastName;
     }
 
     public function getShippingAddress()
@@ -330,6 +366,36 @@ class PaymentRequest {
     public function setShippingHouseExtension($shippingHouseExtension)
     {
         $this->shippingHouseExtension = $shippingHouseExtension;
+    }
+
+    public function getShippingEmail()
+    {
+        return $this->shippingEmail;
+    }
+
+    public function setShippingEmail($shippingEmail): void
+    {
+        $this->shippingEmail = $shippingEmail;
+    }
+
+    public function getShippingFirstName()
+    {
+        return $this->shippingFirstName;
+    }
+
+    public function setShippingFirstName($shippingFirstName): void
+    {
+        $this->shippingFirstName = $shippingFirstName;
+    }
+
+    public function getShippingLastName()
+    {
+        return $this->shippingLastName;
+    }
+
+    public function setShippingLastName($shippingLastName): void
+    {
+        $this->shippingLastName = $shippingLastName;
     }
 
     public function getAccountInfoAccountIdentifier()
