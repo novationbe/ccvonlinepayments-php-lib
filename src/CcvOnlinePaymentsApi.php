@@ -165,10 +165,10 @@ class CcvOnlinePaymentsApi {
      */
     public function createPayment($request) {
         if(strpos($request->getMethod(),"card_") === 0) {
-            list($method, $issuer) = explode("_", $request->getMethod());
+            list($method, $brand) = explode("_", $request->getMethod());
         }else{
             $method = $request->getMethod();
-            $issuer = $request->getIssuer();
+            $brand  = $request->getBrand();
         }
 
         $requestData = [
@@ -180,8 +180,8 @@ class CcvOnlinePaymentsApi {
             "merchantOrderReference"    => $request->getMerchantOrderReference(),
             "description"               => $request->getDescription(),
             "webhookUrl"                => $request->getWebhookUrl(),
-            "issuer"                    => $issuer,
-            "brand"                     => $request->getBrand(),
+            "issuer"                    => $request->getIssuer(),
+            "brand"                     => $brand,
             "metadata"                  => $this->getMetadataString(),
             "scaReady"                  => $request->getScaReady(),
             "billingAddress"            => $request->getBillingAddress(),
