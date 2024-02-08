@@ -35,6 +35,14 @@ class CcvOnlinePaymentsApi {
         $this->metadata = $metadata;
     }
 
+    public function addMetadata($metadata) {
+        if(is_array($this->metadata)) {
+            $this->metadata = array_merge($this->metadata, $metadata);
+        }else{
+            $this->metadata = $metadata;
+        }
+    }
+
     public function getMetadataString() {
         if(is_array($this->metadata)) {
             $metadata = $this->metadata;
