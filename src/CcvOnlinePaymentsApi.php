@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 
 class CcvOnlinePaymentsApi {
 
-    const API_ROOT = "https://redirect.jforce.be/";
+    const API_ROOT = "https://api.psp.ccv.eu/";
 
     private $apiRoot;
 
