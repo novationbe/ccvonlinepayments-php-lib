@@ -581,5 +581,11 @@ class PaymentRequest {
         $this->details = $details;
     }
 
+    public function addDetail(string $key, $value) {
+        if($this->details === null) {
+            $this->details = [];
+        }
+        $this->details[$key] = $value;
+    }
 
 }
