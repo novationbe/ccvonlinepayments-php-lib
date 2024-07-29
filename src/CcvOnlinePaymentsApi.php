@@ -146,7 +146,9 @@ class CcvOnlinePaymentsApi {
             "card_amex",
             "sofort",
             "giropay",
-            "banktransfer"
+            "banktransfer",
+            "applepay",
+            "googlepay"
         ];
 
         if(strtoupper($countryCode) === "BE") {
