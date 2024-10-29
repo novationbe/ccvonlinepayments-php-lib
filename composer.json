@@ -1,5 +1,5 @@
 {
-    "name": "ccv/php-lib",
+    "name": "novationbe/ccvonlinepayments-php-lib",
     "description": "Payment PHP library used by the official CCV Payment Services plugins",
     "keywords": ["php", "library", "payments", "ccv"],
     "homepage": "https://github.com/CCV/ccvonlinepayments-php-lib",
